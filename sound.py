@@ -1,9 +1,19 @@
 from mingus.midi import fluidsynth
 from mingus.containers.Note import Note
-from time import sleep
 
 
-fluidsynth.init("AI-APiano01trans.sf2")
+fluidsynth.init("./resources/s1.sf2", "jck")
+fluidsynth.play_Note(Note('A-3'))
+
+
+
+
+
+
+
+
+
+
 
 class Sound:
     "Class for playing piano notes"
@@ -31,29 +41,3 @@ class Sound:
                     self.press_key(note)
         self.Note_dict = update_dict
 
-
-'''from Tkinter import *
-
-root = Tk()
-S = Sound()
-
-update_array = ["F-5"]
-S.update(update_array)
-S.press_key('F-5')
-def note1(*ignore):
-    S.press_key("C-4")
-def note2(*ignore):
-    S.press_key("D-4")
-def note3(*ignore):
-    S.press_key("E-4")
-def note4(*ignore):
-    S.press_key("C-5")
-def note5(*ignore):
-    S.press_key("D-5")
-
-root.bind('<a>', note1)
-root.bind('<d>', note2)
-root.bind('<k>', note3)
-root.bind('<l>', note4)
-root.bind('<s>', note5)
-root.mainloop() '''

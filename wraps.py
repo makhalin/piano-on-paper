@@ -85,7 +85,7 @@ class Contour(object):
 
 
     def is_ellipse(self):  # heuristic ellipse detection
-        if not 3000 < self.area:
+        if not 250 < self.area < 3000:
             return False
 
         x, y, w, h = self.get_bounding_rectangle()
@@ -134,12 +134,21 @@ class Image(object):
 
 
     def find_contours(self):
-        contours, hierarchy = cv2.findContours(self.image, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+        contours, h = cv2.findContours(self.image, cv2.RETR_LIST, cv2.CHAIN_APPROX_NONE)
+        #contours, h = cv2.findContours(self.image, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
         return [Contour(cnt) for cnt in contours]
-
+  
     def perspective(self, src_points, dest_points, res_size):
         src_points = np.array([p.get_coords() for p in src_points], np.float32)
         dest_points = np.array([p.get_coords() for p in dest_points], np.float32)
         T = cv2.getPerspectiveTransform(src_points, dest_points)
         result = cv2.warpPerspective(self.image, T, res_size)
         return Image(result)
+
+    def eroded(self, kernel_size=(2, 2)):
+        kernel = np.ones(kernel_size,'uint8')
+        return Image(cv2.erode(self.image, kernel))
+
+    def dilated(self, kernel_size=(2, 2)):
+        kernel = np.ones(kernel_size,'uint8')
+        return Image(cv2.dilate(self.image, kernel))
