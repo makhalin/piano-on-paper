@@ -1,8 +1,8 @@
 import cv2
 from cv2 import cv
 import recognition
-import mocks.sound_mock as sound
-
+import sound as sound
+from random import choice
 
 
 def main():
@@ -37,4 +37,11 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+    player = sound.SoundPlayer('./resources/s1.sf2')
+    note_names = player.note_names
+    while True:
+        notes_to_play = [choice(note_names)]
+        player.play_notes(notes_to_play)
+        if cv2.waitKey(1) == 27:  # Escape code
+            break
+
