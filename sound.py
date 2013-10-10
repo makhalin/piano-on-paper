@@ -12,7 +12,7 @@ class Sound:
                  "F-5" : 0, "G-4" : 0, "G-5" : 0, "A-4" : 0, "A-5" : 0, "B-4" : 0, "B-5" : 0}
         Note_point_x = {"C-4" : 15, "D-4" : 52, "E-4" : 88, "F-4" : 125, "G-4" : 160, "A-4" : 197,
                     "B-4" : 234, "C-5" : 270, "D-5" : 307, "E-5" : 343, "F-5" : 378, "G-5" : 415, "A-5" : 452, "B-5" : 487}
-        img = cv2.imread('keyboard_4_5.jpg',cv2.CV_LOAD_IMAGE_COLOR)
+        img = cv2.imread('keyboard.jpg',cv2.CV_LOAD_IMAGE_COLOR)
         cv2.namedWindow('Display Window')
         cv2.imshow('Display Window',img)
             
