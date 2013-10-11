@@ -77,7 +77,10 @@ class KeyboardRecognizer(object):
         if transformed_image is not None:
             gray = transformed_image.to_gray()
             gray = gray.eroded((3, 3))
-            return gray
+            
+            height, width = gray.get_size()
+            recog_height = int(0.6 * height)
+            return Image(gray.image[recog_height:, :])
 
         return None
 
@@ -89,7 +92,7 @@ class KeysRecognizer(object):
         self.window_title = window_title
 
         height, width = self.image.get_size()
-        control_points = [Point(11 * height // 12,  ((2 * i + 1) * width) // 28) for i in range(14)]
+        control_points = [Point(9 * height // 10,  ((2 * i + 1) * width) // 28) for i in range(14)]
         note_names = ("C-4", "D-4", "E-4", "F-4", "G-4", "A-4", "B-4", "C-5", "D-5", "E-5", "F-5", "G-5", "A-5", "B-5")
         self.points = dict(zip(control_points, note_names))
         
@@ -104,7 +107,6 @@ class KeysRecognizer(object):
             if tresh.get_pixel(point) == black:
                 pressed_keys.append(self.points[point])
 
-        tresh = self.image.get_treshold(100, 255)
         tresh.show(self.window_title)
 
         return pressed_keys

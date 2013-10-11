@@ -19,10 +19,12 @@ class SoundPlayer:
         cv2.namedWindow(self.window_title)
         self.img = cv2.imread('./resources/keyboard.jpg', cv2.CV_LOAD_IMAGE_COLOR)
         cv2.imshow(self.window_title, self.img)
+        self.turn_sound_on()
 
 
     def press_key(self, note):
-        fluidsynth.play_Note(Note(note))
+        if self.is_sound_on:
+            fluidsynth.play_Note(Note(note))
 
 
     def play_notes(self, notes_to_play):
@@ -43,5 +45,10 @@ class SoundPlayer:
 
         cv2.imshow(self.window_title, self.img)
 
+    def turn_sound_on(self):
+        self.is_sound_on = True
+
+    def turn_sound_off(self):
+        self.is_sound_on = False
         
         

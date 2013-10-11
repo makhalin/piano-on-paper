@@ -15,7 +15,7 @@ def main():
     ret, frame = cam.read()
 
     player = sound.SoundPlayer('./resources/s1.sf2')
-
+    
     while True:
         ret, frame = cam.read()
 

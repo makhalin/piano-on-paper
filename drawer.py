@@ -116,22 +116,4 @@ result[:recog_height, :] = recog_img
 result[-height:, :] = img
 
 
-cv2.imwrite('kb.jpg', result)
-
-
-width = 600
-height = int(width / sqrt(2))
-
-result = np.zeros((height, width), np.uint8)
-result.fill(white)
-proportions = ((7./32, 1./2),
-			   (25./32, 1./2))
-
-raduis = 80
-for p_x, p_y in proportions:
-    center = (int(width * p_x),
-    	      int(height * p_y))
-    cv2.circle(result, center, radius, black, -1)
-
-
-cv2.imwrite('circles.jpg', result)
+cv2.imwrite('./resources/kb.jpg', result)
