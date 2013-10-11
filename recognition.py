@@ -10,9 +10,9 @@ class KeyboardRecognizer(object):
         self.image = Image(frame)
 
         proportions = reversed([(3./16, 7./16),
-                       (6./16, 3./16),
-                       (10./16, 3./16),
-                       (13./16, 7./16)])
+                                (6./16, 3./16),
+                                (10./16, 3./16),
+                                (13./16, 7./16)])
         width = 400
         height = int(400 / sqrt(2))
         self.elatole_size = (width, height)
@@ -84,12 +84,29 @@ class KeyboardRecognizer(object):
 
 
 class KeysRecognizer(object):
-    def __init__(self, keyboard_image):
+    def __init__(self, keyboard_image, window_title):
         self.image = keyboard_image
-        self.image.show('keyboard')
+        self.window_title = window_title
+
+        height, width = self.image.get_size()
+        control_points = [Point(11 * height // 12,  ((2 * i + 1) * width) // 28) for i in range(14)]
+        note_names = ("C-4", "D-4", "E-4", "F-4", "G-4", "A-4", "B-4", "C-5", "D-5", "E-5", "F-5", "G-5", "A-5", "B-5")
+        self.points = dict(zip(control_points, note_names))
+        
 
     def get_pressed_keys(self):
         tresh = self.image.get_treshold(140, 255)
-        tresh.show('keyboard')
-        contours = tresh.find_contours()
-        
+        pressed_keys = []
+
+        black = 0
+        for point in self.points:
+            tresh.draw_circle(point, radius=7, color=128)
+            if tresh.get_pixel(point) == black:
+                pressed_keys.append(self.points[point])
+
+        tresh = self.image.get_treshold(100, 255)
+        tresh.show(self.window_title)
+
+        return pressed_keys
+
+

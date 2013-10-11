@@ -1,8 +1,7 @@
 import cv2
 from cv2 import cv
-import recognition
+from recognition import KeyboardRecognizer, KeysRecognizer
 import sound as sound
-from random import choice
 
 
 def main():
@@ -13,18 +12,16 @@ def main():
     cam.set(cv.CV_CAP_PROP_FRAME_WIDTH, 600)
     cam.set(cv.CV_CAP_PROP_FRAME_HEIGHT, 480)
     cam.set(cv.CV_CAP_PROP_FPS, 24)
+    ret, frame = cam.read()
 
     player = sound.SoundPlayer('./resources/s1.sf2')
 
-    ret, frame = cam.read()
     while True:
         ret, frame = cam.read()
 
-        keyboard_recog = recognition.KeyboardRecognizer(frame)
-        keyboard_image = keyboard_recog.get_keyboard()
+        keyboard_image = KeyboardRecognizer(frame).get_keyboard()
         if keyboard_image is not None:
-            keys_recog = recognition.KeysRecognizer(keyboard_image)
-            notes = keys_recog.get_pressed_keys()
+            notes = KeysRecognizer(keyboard_image, 'keyboard').get_pressed_keys()
             player.play_notes(notes)
 
         cv2.imshow('original', frame)
@@ -37,11 +34,4 @@ def main():
 
 
 if __name__ == '__main__':
-    player = sound.SoundPlayer('./resources/s1.sf2')
-    note_names = player.note_names
-    while True:
-        notes_to_play = [choice(note_names)]
-        player.play_notes(notes_to_play)
-        if cv2.waitKey(1) == 27:  # Escape code
-            break
-
+    main()

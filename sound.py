@@ -3,6 +3,7 @@ from mingus.midi import fluidsynth
 from mingus.containers.Note import Note
 from pprint import pprint
 
+
 class SoundPlayer:
     "Class for playing piano notes"
     def __init__(self, filename):
@@ -12,11 +13,11 @@ class SoundPlayer:
 
         self.is_pressed = dict.fromkeys(note_names, [False] * len(note_names))
         self.note_coordinate = dict(zip(note_names, coords))
-        pprint(self.note_coordinate)
         self.note_names = note_names
-        self.img = cv2.imread('./resources/keyboard.jpg', cv2.CV_LOAD_IMAGE_COLOR)
+        
         self.window_title = 'Keyboard'
         cv2.namedWindow(self.window_title)
+        self.img = cv2.imread('./resources/keyboard.jpg', cv2.CV_LOAD_IMAGE_COLOR)
         cv2.imshow(self.window_title, self.img)
 
 

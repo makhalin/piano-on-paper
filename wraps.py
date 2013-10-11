@@ -1,4 +1,4 @@
-from math import sin, cos, sqrt, pi
+from math import sqrt, pi
 import cv2
 import cv2.cv as cv
 import numpy as np
@@ -16,6 +16,14 @@ class Point(object):
 
     def get_coords(self):
         return (self.x, self.y)
+
+    def get_reversed_coords(self):
+        return (self.y, self.x)
+
+
+
+    def __hash__(self):
+        return hash((self.x, self.y))
 
 
 class Contour(object):
@@ -114,6 +122,11 @@ class Image(object):
         super(Image, self).__init__()
         self.image = image
     
+    def get_size(self):
+        return (len(self.image), len(self.image[0]))
+
+    def get_pixel(self, point):
+        return self.image[point.x, point.y]
 
     def copy(self):
         return Image(self.image.copy)
@@ -121,6 +134,10 @@ class Image(object):
     
     def show(self, window_name):
         cv2.imshow(window_name, self.image)
+
+
+    def draw_circle(self, point, radius, color):
+        cv2.circle(self.image, point.get_reversed_coords(), radius=radius, color=color)
 
 
     def to_gray(self):
