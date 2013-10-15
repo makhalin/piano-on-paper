@@ -17,8 +17,8 @@ class Point(object):
     def get_coords(self):
         return (self.x, self.y)
 
-    def get_reversed_coords(self):
-        return (self.y, self.x)
+    def reversed(self):
+        return Point(self.y, self.x)
 
 
 
@@ -122,6 +122,14 @@ class Image(object):
         super(Image, self).__init__()
         self.image = image
     
+    def split(self):
+        return [Image(i) for i in cv2.split(self.image)]
+
+    @classmethod
+    def from_channels(self, channels):
+        channels = [c.image for c in channels]
+        return Image(cv2.merge(channels))
+
     def get_size(self):
         return (len(self.image), len(self.image[0]))
 
@@ -137,7 +145,7 @@ class Image(object):
 
 
     def draw_circle(self, point, radius, color):
-        cv2.circle(self.image, point.get_reversed_coords(), radius=radius, color=color)
+        cv2.circle(self.image, point.reversed().get_coords(), radius=radius, color=color)
 
 
     def to_gray(self):

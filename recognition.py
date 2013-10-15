@@ -2,7 +2,6 @@ from itertools import combinations
 from wraps import Image, Contour, Point
 from math import sqrt
 
-
 class KeyboardRecognizer(object):
     """ Recognizes the keyboard image using its topology """
     def __init__(self, frame):
@@ -34,12 +33,16 @@ class KeyboardRecognizer(object):
         if len(ellipses) < 4:
             return None
 
+        gray = self.image.to_gray()
         candidates = []
         for four in combinations(ellipses, 4):
             centers = [e.center for e in four]
             cnt = Contour.from_points(centers)
             cnt = cnt.make_convex()
             if len(cnt) != 4:
+                continue
+
+            if any(gray.get_pixel(c.reversed()) > 100 for c in centers):
                 continue
 
             centers = cnt.to_points()
@@ -75,14 +78,20 @@ class KeyboardRecognizer(object):
     def get_keyboard(self):
         transformed_image = self.transformed()
         if transformed_image is not None:
+            transformed_image = fix_channels(transformed_image)
             gray = transformed_image.to_gray()
             gray = gray.eroded((3, 3))
-            
+
             height, width = gray.get_size()
             recog_height = int(0.6 * height)
             return Image(gray.image[recog_height:, :])
 
         return None
+
+
+def fix_channels(image):
+    (R, G, B) = image.split()
+    return Image.from_channels([G, R, G])
 
 
 
@@ -98,7 +107,7 @@ class KeysRecognizer(object):
         
 
     def get_pressed_keys(self):
-        tresh = self.image.get_treshold(140, 255)
+        tresh = self.image.get_treshold(100, 255)
         pressed_keys = []
 
         black = 0

@@ -1,7 +1,6 @@
 import cv2
 from mingus.midi import fluidsynth
 from mingus.containers.Note import Note
-from pprint import pprint
 
 
 class SoundPlayer:
@@ -50,5 +49,3 @@ class SoundPlayer:
 
     def turn_sound_off(self):
         self.is_sound_on = False
-        
-        
