@@ -30,19 +30,17 @@ class KeyboardRecognizer(object):
 
 
     def choose_four(self, ellipses):
+        gray = self.image.to_gray()
+        ellipses = [e for e in ellipses if gray.get_pixel(e.center.reversed()) < 100]  # with dark enters only
         if len(ellipses) < 4:
             return None
 
-        gray = self.image.to_gray()
         candidates = []
         for four in combinations(ellipses, 4):
             centers = [e.center for e in four]
             cnt = Contour.from_points(centers)
             cnt = cnt.make_convex()
             if len(cnt) != 4:
-                continue
-
-            if any(gray.get_pixel(c.reversed()) > 100 for c in centers):
                 continue
 
             centers = cnt.to_points()
@@ -91,7 +89,7 @@ class KeyboardRecognizer(object):
 
 def fix_channels(image):
     (R, G, B) = image.split()
-    return Image.from_channels([G, R, G])
+    return Image.from_channels([R, G, R])
 
 
 
