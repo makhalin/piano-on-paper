@@ -105,7 +105,7 @@ class KeysRecognizer(object):
         
 
     def get_pressed_keys(self):
-        tresh = self.image.get_treshold(100, 255)
+        tresh = self.image.get_treshold(90, 255)
         pressed_keys = []
 
         black = 0
