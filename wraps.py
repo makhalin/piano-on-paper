@@ -20,7 +20,11 @@ class Point(object):
     def reversed(self):
         return Point(self.y, self.x)
 
+    def __add__(self, p):
+        return Point(self.x + p.x, self.y + p.y)
 
+    def __sub__(self, p):
+        return Point(self.x - p.x, self.y - p.y)
 
     def __hash__(self):
         return hash((self.x, self.y))
@@ -136,9 +140,12 @@ class Image(object):
     def get_pixel(self, point):
         return self.image[point.x, point.y]
 
+    def get_mean_color_in_rect(self, tl, br):
+        rect = self.image[tl.x:br.x, tl.y:br.y]
+        return cv2.mean(rect)[0]
+
     def copy(self):
         return Image(self.image.copy)
-
     
     def show(self, window_name):
         cv2.imshow(window_name, self.image)
@@ -146,6 +153,13 @@ class Image(object):
 
     def draw_circle(self, point, radius, color):
         cv2.circle(self.image, point.reversed().get_coords(), radius=radius, color=color)
+
+
+    def draw_rectangle(self, tl, br, color):
+        cv2.rectangle(self.image, 
+                      tl.reversed().get_coords(),
+                      br.reversed().get_coords(),
+                      color=color)
 
 
     def to_gray(self):

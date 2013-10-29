@@ -99,7 +99,7 @@ class KeysRecognizer(object):
         self.window_title = window_title
 
         height, width = self.image.get_size()
-        control_points = [Point(9 * height // 10,  ((2 * i + 1) * width) // 28) for i in range(14)]
+        control_points = [Point(8 * height // 9,  ((2 * i + 1) * width) // 28) for i in range(14)]
         note_names = ("C-4", "D-4", "E-4", "F-4", "G-4", "A-4", "B-4", "C-5", "D-5", "E-5", "F-5", "G-5", "A-5", "B-5")
         self.points = dict(zip(control_points, note_names))
         
@@ -109,9 +109,20 @@ class KeysRecognizer(object):
         pressed_keys = []
 
         black = 0
+        means = []
+        delta = Point(12, 9)
+
         for point in self.points:
             tresh.draw_circle(point, radius=7, color=128)
-            if tresh.get_pixel(point) == black:
+
+            tl = point - delta
+            br = point + delta
+            
+            mean = tresh.get_mean_color_in_rect(tl, br)
+            tresh.draw_rectangle(tl, br, 0)
+            #if tresh.get_pixel(point) == black:
+            print(int(mean))
+            if mean < 120:
                 pressed_keys.append(self.points[point])
 
         tresh.show(self.window_title)
