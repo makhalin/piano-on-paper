@@ -99,34 +99,56 @@ class KeysRecognizer(object):
         self.window_title = window_title
 
         height, width = self.image.get_size()
-        control_points = [Point(8 * height // 9,  ((2 * i + 1) * width) // 28) for i in range(14)]
-        note_names = ("C-4", "D-4", "E-4", "F-4", "G-4", "A-4", "B-4", "C-5", "D-5", "E-5", "F-5", "G-5", "A-5", "B-5")
-        self.points = dict(zip(control_points, note_names))
+
+        white_control_points = [Point(8 * height // 9,  ((2 * i + 1) * width) // 28) for i in range(14)]
+        white_note_names = ("C-4", "D-4", "E-4", "F-4", "G-4", "A-4", "B-4", "C-5", "D-5", "E-5", "F-5", "G-5", "A-5", "B-5")
+        self.white_names = dict(zip(white_control_points, white_note_names))
+
+        black_control_points = [Point(11 * height // 21,  i) for i in (27, 62, 114, 145, 175, 228, 262, 312, 344, 376)]
+        black_note_names = ['C#-4', 'D#-4', 'F#-4', 'G#-4', 'A#-4', 'C#-5', 'D#-5', 'F#-5', 'G#-5', 'A#-5']
+        self.black_names = dict(zip(black_control_points, black_note_names))
         
 
-    def get_pressed_keys(self):
+    def get_pressed_white_keys(self):
         tresh = self.image.get_treshold(90, 255)
         pressed_keys = []
 
-        black = 0
-        means = []
         delta = Point(12, 9)
 
-        for point in self.points:
-            tresh.draw_circle(point, radius=7, color=128)
+        for center, name in self.white_names.iteritems():
+            tresh.draw_circle(center, radius=7, color=128)
 
-            tl = point - delta
-            br = point + delta
+            tl = center - delta
+            br = center + delta
             
             mean = tresh.get_mean_color_in_rect(tl, br)
             tresh.draw_rectangle(tl, br, 0)
-            #if tresh.get_pixel(point) == black:
-            print(int(mean))
+
             if mean < 120:
-                pressed_keys.append(self.points[point])
+                pressed_keys.append(name)
 
-        tresh.show(self.window_title)
-
+        tresh.show(self.window_title + ' whites')
         return pressed_keys
 
+
+    def get_pressed_black_keys(self):
+        tresh = self.image.get_treshold(30, 255)
+        delta = Point(8, 6)
+        pressed_keys = []
+
+        for center, name in self.black_names.iteritems():
+            tl = center - delta
+            br = center + delta
+            tresh.draw_rectangle(tl, br, 0)
+            
+            mean = tresh.get_mean_color_in_rect(tl, br)
+            if mean > 150:
+                pressed_keys.append(name)
+
+        tresh.show(self.window_title + ' blacks')
+        return pressed_keys
+
+
+    def get_pressed_keys(self):
+        return self.get_pressed_white_keys() + self.get_pressed_black_keys()
 
